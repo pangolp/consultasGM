@@ -17,6 +17,13 @@
   			</div>
   		</div>
   		<div class="row mt-2">
+        <form method="post" class="mb-4" v-on:submit.prevent="buscar">
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="creatureInputHelp" v-model="creatureName">
+            <small id="creatureInputHelp" class="form-text text-muted">Nombre de la criatura a buscar (en inglés)</small>
+          </div>
+          <button type="submit" class="btn btn-primary" v-on:click.stop="buscar">Buscar</button>
+        </form>
   			<table class="table table-sm text-center">
   				<thead>
   					<tr>
@@ -27,7 +34,7 @@
   						<th scope="col">Model 4</th>
   					</tr>
             <tbody>
-              <tr v-for="creature in creatures">
+              <tr v-for="creature in creatureList">
                 <th scope="col">{{ creature.name }}</th>
                 <td>{{ creature.modelid1 }}</td>
                 <td>{{ creature.modelid2 }}</td>
@@ -48,17 +55,23 @@
       var app = new Vue({
         el: "#app",
         data: {
-          creatures: []
+          creatureList: [],
+          resultado: [],
+          creatureName: ''
+        },
+        methods: {
+          buscar: function() {
+              this.creatureList = this.resultado.filter(creature => creature.name.toLowerCase().includes(this.creatureName.toLowerCase()));
+          }
         },
         mounted: function() {
           axios.get("https://raw.githubusercontent.com/pangolp/consultasGM/master/json/morph_creature.json")
-              .then(response => {
-                this.creatures = response.data;
-                console.log(response);
-              })
-              .catch(error => {
-                console.log(error);
-              });
+            .then(response => {
+              this.resultado = response.data;
+            })
+            .catch(error => {
+              console.log(error);
+            });
         }
       });
   </script>
