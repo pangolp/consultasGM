@@ -22,7 +22,7 @@
             <input type="text" class="form-control" aria-describedby="creatureInputHelp" v-model="creatureName">
             <small id="creatureInputHelp" class="form-text text-muted">Nombre de la criatura a buscar (en inglés)</small>
           </div>
-          <button type="submit" class="btn btn-primary" v-on:click.stop="buscar">Buscar</button>
+          <button type="submit" class="btn btn-primary" v-on:click.stop="buscar" v-show="habilitado">Buscar</button>
         </form>
   			<table class="table table-sm text-center">
   				<thead>
@@ -62,6 +62,11 @@
         methods: {
           buscar: function() {
               this.creatureList = this.resultado.filter(creature => creature.name.toLowerCase().includes(this.creatureName.toLowerCase()));
+          }
+        },
+        computed: {
+          habilitado() {
+            return this.creatureName.length > 0 ? true : false
           }
         },
         mounted: function() {
